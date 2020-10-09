@@ -71,7 +71,8 @@ strings.repeat = function(str, count) {
 
 function requirements() {
   // Closure Compiler after v20131014 requires Java 7.
-  var required = $.semver('1.7.0');
+  //var required = $.semver('1.7.0');
+  var required = $.semver('11.0.0');
   $.childProcess.exec('java -version', function(error, stdout, stderr) {
     if (error || !stderr) {
       $.util.error([
@@ -83,7 +84,8 @@ function requirements() {
     var version;
     var installed;
     try {
-      version = stderr.split('\n')[0].split(' ').slice(-1)[0].replace(/"/g, '');
+      //version = stderr.split('\n')[0].split(' ').slice(-1)[0].replace(/"/g, '');
+      version = stderr.split('\n')[0].split(' ').slice(-2)[0].replace(/"/g, '');
       // Replace underscores to make Java's version string semver-compatible.
       installed = $.semver.parse(version.replace('_', '-'));
     } catch (ex) {}
