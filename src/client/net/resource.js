@@ -226,10 +226,11 @@ spf.net.resource.check = function(type) {
  * @param {string=} opt_prevUrl Optional URL of the previous version of this
  *     resource. Used for stylesheets to load new versions in-place to prevent
 *      changing the order of the cascade.
+ * @param {string=} script_type Optional script type added to element.
  * @return {Element} The dynamically created element.
  */
 spf.net.resource.create = function(type, url, opt_callback, opt_document,
-    opt_statusGroup, opt_prevUrl) {
+    opt_statusGroup, opt_prevUrl, script_type) {
   spf.debug.debug('resource.create', type, url, 'loading');
   // When built for the bootloader, always assume JS is being loaded.
   var isJS = SPF_BOOTLOADER || type == spf.net.resource.Type.JS;
@@ -263,6 +264,12 @@ spf.net.resource.create = function(type, url, opt_callback, opt_document,
   }
   var label = spf.net.resource.label(url);
   el.className = spf.net.resource.key(type, label);
+  if (script_type == 'module') {
+    el.type = script_type
+  }
+  if (script_type == 'nomodule') {
+    el.setAttribute(script_type,'')
+  }
   // Chrome, Safari, Firefox, Opera and IE 9 support script onload.
   // Chrome 19, Safari 6, Firefox 9, Opera and IE 5.5 support stylesheet onload.
   // To support scripts IE 8 and below, use script onreadystatechange.

@@ -102,11 +102,12 @@ spf.net.script.discover = function() {
  * be unloaded by name.  Compare to {@link #load}.
  *
  * @param {string} url URL of the script to load.
+ * @param {string=} script_type Optional script type added to element.
  * @param {Function=} opt_fn Function to execute when loaded.
  */
-spf.net.script.get = function(url, opt_fn) {
+spf.net.script.get = function(url, opt_fn, script_type) {
   var type = spf.net.resource.Type.JS;
-  spf.net.resource.create(type, url, opt_fn);
+  spf.net.resource.create(type, url, opt_fn, undefined, undefined, undefined, script_type);
 };
 
 

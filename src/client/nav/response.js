@@ -544,6 +544,7 @@ spf.nav.response.extract_ = function(frag) {
         result['scripts'].push({url: script['url'] || '',
                              text: script['text'] || '',
                              name: script['name'] || '',
+                             type: script['type'] || '',
                              async: script['async'] || false});
       });
     }
@@ -583,12 +584,15 @@ spf.nav.response.extract_ = function(frag) {
           url = url ? url[1] : '';
           var async = spf.nav.response.AttributeRegEx.ASYNC.test(attr);
           var type = spf.nav.response.AttributeRegEx.TYPE.exec(attr);
+          var script_type = type && (type[1] == 'module' || type[1] == 'nomodule') ? type[1] : ''
           var inject = !type || spf.string.contains(type[1], '/javascript') ||
               spf.string.contains(type[1], '/x-javascript') ||
-              spf.string.contains(type[1], '/ecmascript');
+              spf.string.contains(type[1], '/ecmascript') ||
+              spf.string.contains(type[1], 'module') ||
+              spf.string.contains(type[1], 'nomodule');
           if (inject) {
             result['scripts'].push(
-                {url: url, text: text, name: name, async: async});
+              {url: url, text: text, name: name, async: async, type: script_type });
             return '';
           } else {
             return full;
@@ -671,7 +675,7 @@ spf.nav.response.installScripts_ = function(result, opt_callback) {
         if (item.name) {
           fn = spf.bind(spf.net.script.load, null, item.url, item.name);
         } else {
-          fn = spf.bind(spf.net.script.get, null, item.url);
+          fn = spf.bind(spf.net.script.get, null, item.url, null, item.type);
         }
       } else if (item.text) {
         if (item.name) {
@@ -877,7 +881,7 @@ spf.nav.response.Extraction_ = function() {
   this['html'] = '';
   /** @type {!Array.<{url:string, text:string, name:string, async:boolean}>} */
   this['scripts'] = [];
-  /** @type {!Array.<{url:string, text:string, name:string}>} */
+  /** @type {!Array.<{url:string, text:string, name:string, type:string}>} */
   this['styles'] = [];
   /** @type {!Array.<{url:string, rel:string}>} */
   this['links'] = [];
